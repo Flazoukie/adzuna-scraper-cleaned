@@ -36,7 +36,7 @@ def fetch_adzuna_jobs(keyword="data science", country="de", pages=3, results_per
 if __name__ == "__main__":
     app_id = os.getenv("ADZUNA_APP_ID")
     app_key = os.getenv("ADZUNA_APP_KEY")
-    df = fetch_adzuna_jobs(app_id=app_id, app_key=app_key)
+    df = fetch_adzuna_jobs(app_id=app_id, app_key=app_key, pages=5)
 
     today = date.today().isoformat()
     out_dir = "data"
