@@ -3,7 +3,7 @@ name: Update Job Visuals and Push to Blog
 on:
   schedule:
     - cron: '0 8 * * 1'  # Every Monday at 08:00 UTC
-  workflow_dispatch:    # Allows manual trigger
+  workflow_dispatch:    # Allows manual trigger from GitHub UI
 
 jobs:
   update-blog:
@@ -57,4 +57,3 @@ jobs:
         git add posts/latest-jobs/
         git commit -m "Update latest job visualizations" || echo "No changes to commit"
         git push
-
