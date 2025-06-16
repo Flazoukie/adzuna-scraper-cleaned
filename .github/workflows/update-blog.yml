@@ -1,10 +1,9 @@
-
 name: Update Job Visuals and Push to Blog
 
 on:
   schedule:
     - cron: '0 8 * * 1'  # Every Monday at 08:00 UTC
-  workflow_dispatch:    # Allows manual trigger
+  workflow_dispatch:    # Allows manual trigger from GitHub UI
 
 jobs:
   update-blog:
@@ -27,47 +26,14 @@ jobs:
     - name: Run scraper
       run: python adzuna_scraper.py
 
-    - name: Verify CSV file exists and list files
+    - name: Verify CSV file
       run: |
         echo "Checking contents of data directory:"
         ls -lh data/
-
-    - name: Preview first 10 lines of CSV file(s)
-      run: |
+        echo "Preview of CSV file:"
         head -n 10 data/jobs_*.csv || echo "No data to preview"
-
-    - name: Check CSV file size
-      run: |
-        for f in data/jobs_*.csv; do
-          echo "File: $f"
-          stat $f
-        done
-
-    - name: Wait 5 seconds to ensure file write completes
-      run: sleep 5
-
-    - name: Test CSV readability with pandas
-      run: |
-        pip install pandas
-        python -c "
-import glob
-import pandas as pd
-
-files = glob.glob('data/jobs_*.csv')
-if not files:
-    print('No CSV files found in data/')
-    exit(1)
-
-latest_file = max(files)
-print(f'Reading CSV file: {latest_file}')
-try:
-    df = pd.read_csv(latest_file, encoding='utf-8', engine='python', on_bad_lines='skip')
-    print(f'Read {len(df)} rows and {len(df.columns)} columns')
-    print(df.head())
-except Exception as e:
-    print(f'Error reading CSV: {e}')
-    exit(1)
-"
+        echo "Sleeping to ensure file write completes..."
+        sleep 3
 
     - name: Run notebook to generate visuals
       run: |
