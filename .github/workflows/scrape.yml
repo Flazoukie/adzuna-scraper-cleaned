@@ -1,4 +1,4 @@
-name: Weekly Adzuna Scraper
+name: Scrape Job Data
 
 on:
   schedule:
