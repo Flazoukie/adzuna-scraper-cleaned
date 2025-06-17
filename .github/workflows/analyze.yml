@@ -2,10 +2,6 @@ name: Analyze Scraped Data
 
 on:
   workflow_dispatch:
-  workflow_run:
-    workflows: ["Scrape Job Data"]
-    types:
-      - completed
 
 jobs:
   scrape_and_analyze:
