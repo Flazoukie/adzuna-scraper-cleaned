@@ -39,7 +39,7 @@ jobs:
       - name: Copy analysis results to data-blog repo
         run: |
           # Adjust 'results' below if your notebook saves files elsewhere
-          cp -r results/* data-blog/results/
+          cp -r output/* data-blog/results/
 
       - name: Commit and push results to data-blog
         run: |
