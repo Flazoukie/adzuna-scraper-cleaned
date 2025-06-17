@@ -49,4 +49,7 @@ jobs:
       - name: Publish results to data-blog
         env:
           DATA_BLOG_TOKEN: ${{ secrets.DATA_BLOG_TOKEN }}
-        run: python publish_to_blog.py
+        shell: bash
+        run: |
+          echo "DATA_BLOG_TOKEN is set: ${DATA_BLOG_TOKEN:+yes}"
+          python publish_to_blog.py
