@@ -1,4 +1,4 @@
-name: Scrape and Analyze Jobs
+name: Analyze Weekly Job Data
 
 on:
   workflow_dispatch:
