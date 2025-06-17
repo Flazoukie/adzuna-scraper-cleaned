@@ -24,4 +24,6 @@ jobs:
           git clone https://x-access-token:${{ secrets.BLOG_REPO_TOKEN }}@github.com/Flazoukie/data-blog.git
 
       - name: Run publish script
+        env:
+          BLOG_REPO_TOKEN: ${{ secrets.BLOG_REPO_TOKEN }}
         run: python publish_to_blog.py
