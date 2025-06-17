@@ -3,7 +3,7 @@ import shutil
 import subprocess
 import sys
 
-SCRAPER_OUTPUT_DIR = "output"
+SCRAPER_OUTPUT_DIR = "results"
 DATABLOG_DIR = "data-blog"
 DATABLOG_RESULTS_DIR = os.path.join(DATABLOG_DIR, "results")
 
