@@ -23,6 +23,11 @@ def copy_files():
 def git_commit_push():
     os.chdir(DATABLOG_DIR)
     print(f"Current directory for git commands: {os.getcwd()}")
+
+    # Set Git identity for GitHub Actions
+    subprocess.run(["git", "config", "user.name", "github-actions"], check=True)
+    subprocess.run(["git", "config", "user.email", "github-actions@github.com"], check=True)
+
     subprocess.run(["git", "add", "results/*"], check=True)
     commit_message = "Update blog results with latest analysis"
     subprocess.run(["git", "commit", "-m", commit_message], check=True)
