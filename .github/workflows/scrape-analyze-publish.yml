@@ -3,7 +3,7 @@ name: Scrape, Analyze and Publish Blog Results
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 12 * * *'  # daily at 12:00 UTC, adjust as needed
+    - cron: '0 8 * * 1'  # Every Monday at 10:00 CET/CEST (8:00 UTC)
 
 jobs:
   scrape_analyze_publish:
