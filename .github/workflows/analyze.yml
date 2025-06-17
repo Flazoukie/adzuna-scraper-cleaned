@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout scraper repo
         uses: actions/checkout@v3
 
       - name: Setup Python 3.12
@@ -30,20 +30,23 @@ jobs:
         run: |
           jupyter nbconvert --to notebook --execute analyze_jobs.ipynb --output output.ipynb --ExecutePreprocessor.timeout=600 --ExecutePreprocessor.allow_errors=True
 
-      - name: Configure Git for commit
-        run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-
-      - name: Add and commit analysis results
-        run: |
-          git add data-blog/results/*
-          git commit -m "Add latest analysis results $(date +'%Y-%m-%d')" || echo "No changes to commit"
-
-      - name: Push analysis results
+      - name: Clone data-blog repository
         env:
           BLOG_REPO_TOKEN: ${{ secrets.BLOG_REPO_TOKEN }}
         run: |
-          git remote set-url origin https://x-access-token:${BLOG_REPO_TOKEN}@github.com/Flazoukie/data-blog.git
+          git clone https://x-access-token:${BLOG_REPO_TOKEN}@github.com/Flazoukie/data-blog.git
+
+      - name: Copy analysis results to data-blog repo
+        run: |
+          # Replace `results` with the folder where your notebook saves output files
+          cp -r results/* data-blog/results/
+
+      - name: Commit and push results to data-blog
+        run: |
+          cd data-blog
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add results/*
+          git commit -m "Add latest analysis results $(date +'%Y-%m-%d')" || echo "No changes to commit"
           git push
 
