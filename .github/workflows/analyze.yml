@@ -1,9 +1,11 @@
-name: Analyze Weekly Job Data
+name: Analyze Scraped Data
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '0 8 * * 1'  # Every Monday at 10:00 CET/CEST (8:00 UTC)
+  workflow_run:
+    workflows: ["Scrape Job Data"]
+    types:
+      - completed
 
 jobs:
   scrape_and_analyze:
