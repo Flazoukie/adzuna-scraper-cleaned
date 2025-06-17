@@ -1,4 +1,4 @@
-name: Publish Blog Results
+name: Publish Analysis Results
 
 on:
   workflow_dispatch:
@@ -8,22 +8,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Python
+      - name: Download analysis output
+        uses: actions/download-artifact@v3
+        with:
+          name: analysis-output
+          path: output
+
+      - name: Setup Python 3.12
         uses: actions/setup-python@v4
         with:
-          python-version: 3.11
+          python-version: 3.12
 
       - name: Install dependencies
-        run: pip install --upgrade pip && pip install pandas
-
-      - name: Clone data-blog repo
-        run: |
-          git clone https://x-access-token:${{ secrets.BLOG_REPO_TOKEN }}@github.com/Flazoukie/data-blog.git
+        run: pip install pandas requests
 
       - name: Run publish script
         env:
           BLOG_REPO_TOKEN: ${{ secrets.BLOG_REPO_TOKEN }}
         run: python publish_to_blog.py
+
