@@ -30,8 +30,15 @@ jobs:
         run: |
           jupyter nbconvert --to notebook --execute analyze_jobs.ipynb --output output.ipynb --ExecutePreprocessor.timeout=600 --ExecutePreprocessor.allow_errors=True
 
+      - name: Upload output artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: analysis-output
+          path: output
+
       - name: Trigger publish workflow
         uses: benc-uk/workflow-dispatch@v1
         with:
-          workflow: publish.yml   # Adjust if your publish workflow filename differs
+          workflow: publish.yml
           token: ${{ secrets.BLOG_REPO_TOKEN }}
+
