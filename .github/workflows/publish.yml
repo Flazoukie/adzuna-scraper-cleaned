@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'data-blog/results/**'
+    workflow_dispatch:
 
 jobs:
   publish:
