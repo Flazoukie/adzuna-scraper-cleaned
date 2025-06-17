@@ -33,6 +33,10 @@ jobs:
         run: |
           jupyter nbconvert --to notebook --execute analyze_jobs.ipynb --output output.ipynb --ExecutePreprocessor.timeout=600
 
+      - name: List files in output folder (debug)
+        run: ls -l output
+0
+
       - name: Clone data-blog repo
         env:
           DATA_BLOG_TOKEN: ${{ secrets.DATA_BLOG_TOKEN }}
