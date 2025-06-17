@@ -36,9 +36,4 @@ jobs:
           name: analysis-output
           path: output
 
-      - name: Trigger publish workflow
-        uses: benc-uk/workflow-dispatch@v1
-        with:
-          workflow: publish.yml
-          token: ${{ secrets.BLOG_REPO_TOKEN }}
 
