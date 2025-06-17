@@ -39,6 +39,7 @@ jobs:
       - name: Clone data-blog repo
         env:
           DATA_BLOG_TOKEN: ${{ secrets.DATA_BLOG_TOKEN }}
+        shell: bash
         run: |
           git clone https://x-access-token:${DATA_BLOG_TOKEN}@github.com/Flazoukie/data-blog.git
 
@@ -48,9 +49,4 @@ jobs:
       - name: Publish results to data-blog
         env:
           DATA_BLOG_TOKEN: ${{ secrets.DATA_BLOG_TOKEN }}
-        run: python publish_to_blog.py "$DATA_BLOG_TOKEN"
-
-
-      - name: Publish results to data-blog
         run: python publish_to_blog.py
-
