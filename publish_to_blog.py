@@ -30,7 +30,8 @@ def git_commit_push(github_token):
     remote_url = f"https://x-access-token:{github_token}@github.com/Flazoukie/data-blog.git"
     subprocess.run(["git", "remote", "set-url", "origin", remote_url], check=True)
 
-    subprocess.run(["git", "add", "results/*"], shell=True, check=True)
+    subprocess.run("git add results/*", shell=True, check=True)
+
     
     # Commit only if there are changes
     result = subprocess.run(["git", "diff", "--cached", "--quiet"])
