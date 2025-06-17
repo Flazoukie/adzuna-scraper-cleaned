@@ -23,13 +23,23 @@ def copy_files():
 def git_commit_push():
     os.chdir(DATABLOG_DIR)
     print(f"Current directory for git commands: {os.getcwd()}")
+
+    # Set Git identity
     subprocess.run(["git", "config", "user.name", "github-actions"], check=True)
     subprocess.run(["git", "config", "user.email", "github-actions@github.com"], check=True)
+
+    # ⚠️ Overwrite the remote URL with authentication token
+    github_token = os.environ["DATA_BLOG_TOKEN"]
+    remote_url = f"https://x-access-token:{github_token}@github.com/Flazoukie/data-blog.git"
+    subprocess.run(["git", "remote", "set-url", "origin", remote_url], check=True)
+
+    # Stage, commit, and push
     subprocess.run(["git", "add", "results/*"], check=True)
-    commit_message = "Update blog results with latest analysis"
-    subprocess.run(["git", "commit", "-m", commit_message], check=True)
+    subprocess.run(["git", "commit", "-m", "Update blog results with latest analysis"], check=True)
     subprocess.run(["git", "push"], check=True)
+
     print("Changes pushed to data-blog repo.")
+
 
 if __name__ == "__main__":
     copy_files()
