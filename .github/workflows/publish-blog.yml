@@ -20,17 +20,15 @@ def git_commit_push():
     # Change directory to data-blog repo
     os.chdir(r"C:\Users\flavi\PycharmProjects\DataBlog")
 
-    # Add copied files
-    subprocess.run(["git", "add", "results/*"])
+    # Add copied files to git staging
+    subprocess.run(["git", "add", "results/"], check=True)
 
-    # Commit
-    commit_message = "Update analysis results"
-    subprocess.run(["git", "commit", "-m", commit_message])
+    # Commit changes
+    subprocess.run(["git", "commit", "-m", "Update analysis results"], check=True)
 
-    # Push
-    subprocess.run(["git", "push"])
+    # Push changes
+    subprocess.run(["git", "push"], check=True)
 
 if __name__ == "__main__":
     copy_files()
     git_commit_push()
-
