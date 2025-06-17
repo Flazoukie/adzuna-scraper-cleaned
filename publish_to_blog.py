@@ -2,9 +2,9 @@ import os
 import shutil
 import subprocess
 
-# Paths — adjust if needed
-SCRAPER_OUTPUT_DIR = "output"  # relative to where this script runs (adzuna scraper repo)
-DATABLOG_DIR = r"C:\Users\flavi\PycharmProjects\DataBlog"
+# Paths inside GitHub Actions runner
+SCRAPER_OUTPUT_DIR = "output"
+DATABLOG_DIR = "data-blog"  # relative to root of the GitHub Actions workspace
 DATABLOG_RESULTS_DIR = os.path.join(DATABLOG_DIR, "results")
 
 def copy_files():
@@ -23,11 +23,8 @@ def copy_files():
 def git_commit_push():
     os.chdir(DATABLOG_DIR)
     print(f"Current directory for git commands: {os.getcwd()}")
-
-    # Set Git identity for GitHub Actions
     subprocess.run(["git", "config", "user.name", "github-actions"], check=True)
     subprocess.run(["git", "config", "user.email", "github-actions@github.com"], check=True)
-
     subprocess.run(["git", "add", "results/*"], check=True)
     commit_message = "Update blog results with latest analysis"
     subprocess.run(["git", "commit", "-m", commit_message], check=True)
@@ -37,3 +34,4 @@ def git_commit_push():
 if __name__ == "__main__":
     copy_files()
     git_commit_push()
+
