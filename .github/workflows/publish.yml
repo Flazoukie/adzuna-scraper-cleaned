@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - 'data-blog/results/**'
-    workflow_dispatch:
+  workflow_dispatch:
 
 jobs:
   publish:
@@ -28,5 +28,3 @@ jobs:
         env:
           BLOG_REPO_TOKEN: ${{ secrets.BLOG_REPO_TOKEN }}
         run: python publish_to_blog.py
-
-
