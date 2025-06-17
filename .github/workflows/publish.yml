@@ -1,10 +1,11 @@
 name: Publish Analysis Results
 
 on:
-  workflow_run:
-    workflows: ["Analyze Scraped Data"]
-    types:
-      - completed
+  push:
+    branches:
+      - main      # or your default branch
+    paths:
+      - 'data-blog/results/**'   # trigger only if results folder changes
 
 jobs:
   publish:
@@ -13,12 +14,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
-      - name: Download analysis output
-        uses: actions/download-artifact@v4
-        with:
-          name: analysis-output
-          path: output
 
       - name: Setup Python 3.12
         uses: actions/setup-python@v4
@@ -32,4 +27,5 @@ jobs:
         env:
           BLOG_REPO_TOKEN: ${{ secrets.BLOG_REPO_TOKEN }}
         run: python publish_to_blog.py
+
 
