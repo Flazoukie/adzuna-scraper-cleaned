@@ -1,57 +1,27 @@
-name: Publish Analysis Results
+name: Publish Blog Results
 
 on:
   workflow_dispatch:
-  workflow_run:
-    workflows: ["Analyze Scraped Data"]
-    types:
-      - completed
 
 jobs:
-  scrape_analyze_publish:
+  publish:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout scraper repo
+      - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Setup Python 3.12
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.12
+          python-version: 3.11
 
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install pandas requests jupyter nbconvert matplotlib seaborn folium scikit-learn geopy altair
-
-      - name: Run scraper
-        env:
-          ADZUNA_APP_ID: ${{ secrets.ADZUNA_APP_ID }}
-          ADZUNA_APP_KEY: ${{ secrets.ADZUNA_APP_KEY }}
-        run: python adzuna_scraper.py
-
-      - name: Execute analysis notebook
-        run: |
-          jupyter nbconvert --to notebook --execute analyze_jobs.ipynb --output output.ipynb --ExecutePreprocessor.timeout=600
-
-      - name: List files in output folder (debug)
-        run: ls -l output
+        run: pip install --upgrade pip && pip install pandas
 
       - name: Clone data-blog repo
-        env:
-          BLOG_REPO_TOKEN: ${{ secrets.BLOG_REPO_TOKEN }}
-        shell: bash
         run: |
-          git clone https://x-access-token:${BLOG_REPO_TOKEN}@github.com/Flazoukie/data-blog.git
+          git clone https://x-access-token:${{ secrets.BLOG_REPO_TOKEN }}@github.com/Flazoukie/data-blog.git
 
-      - name: List files in cloned data-blog results folder (before publish script)
-        run: ls -l data-blog/results
-
-      - name: Publish results to data-blog
-        env:
-          BLOG_REPO_TOKEN: ${{ secrets.BLOG_REPO_TOKEN }}
-        shell: bash
-        run: |
-          echo "BLOG_REPO_TOKEN is set: ${BLOG_REPO_TOKEN:+yes}"
-          python publish_to_blog.py
+      - name: Run publish script
+        run: python publish_to_blog.py
