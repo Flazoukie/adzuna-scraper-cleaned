@@ -2,9 +2,11 @@ import os
 import shutil
 import subprocess
 
-# Paths — adjust if needed
-SCRAPER_OUTPUT_DIR = "output"  # relative to where this script runs (adzuna scraper repo)
-DATABLOG_DIR = r"C:\Users\flavi\PycharmProjects\DataBlog"
+# Paths relative to where this script runs (in scraper repo)
+SCRAPER_OUTPUT_DIR = "output"
+
+# The data-blog repo will be cloned inside this workflow folder
+DATABLOG_DIR = "data-blog"
 DATABLOG_RESULTS_DIR = os.path.join(DATABLOG_DIR, "results")
 
 def copy_files():
@@ -17,9 +19,13 @@ def copy_files():
 
 def git_commit_push():
     os.chdir(DATABLOG_DIR)
-    subprocess.run(["git", "add", "results/*"], check=True)
+    subprocess.run(["git", "add", "results"], check=True)
     commit_message = "Update blog results with latest analysis"
-    subprocess.run(["git", "commit", "-m", commit_message], check=True)
+    try:
+        subprocess.run(["git", "commit", "-m", commit_message], check=True)
+    except subprocess.CalledProcessError:
+        print("Nothing to commit.")
+        return
     subprocess.run(["git", "push"], check=True)
     print("Changes pushed to data-blog repo.")
 
