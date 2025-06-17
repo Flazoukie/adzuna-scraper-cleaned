@@ -1,28 +1,28 @@
 import os
 import shutil
-from datetime import date
+import subprocess
 
-# Paths
-output_dir = "output"
-blog_repo = "blog"
-post_dir = f"{blog_repo}/posts/adzuna-weekly/{date.today().isoformat()}"
+# Paths — adjust if needed
+SCRAPER_OUTPUT_DIR = "output"  # relative to where this script runs (adzuna scraper repo)
+DATABLOG_DIR = r"C:\Users\flavi\PycharmProjects\DataBlog"
+DATABLOG_RESULTS_DIR = os.path.join(DATABLOG_DIR, "results")
 
-# Create destination folder in blog
-os.makedirs(post_dir, exist_ok=True)
+def copy_files():
+    os.makedirs(DATABLOG_RESULTS_DIR, exist_ok=True)
+    for filename in os.listdir(SCRAPER_OUTPUT_DIR):
+        src_path = os.path.join(SCRAPER_OUTPUT_DIR, filename)
+        dst_path = os.path.join(DATABLOG_RESULTS_DIR, filename)
+        print(f"Copying {src_path} to {dst_path}")
+        shutil.copy2(src_path, dst_path)
 
-# Files to copy
-files_to_copy = [
-    "top_cities.png",
-    "company_map.html",
-    "interactive_job_table.html"
-]
+def git_commit_push():
+    os.chdir(DATABLOG_DIR)
+    subprocess.run(["git", "add", "results/*"], check=True)
+    commit_message = "Update blog results with latest analysis"
+    subprocess.run(["git", "commit", "-m", commit_message], check=True)
+    subprocess.run(["git", "push"], check=True)
+    print("Changes pushed to data-blog repo.")
 
-# Copy files from output/ to blog post folder
-for filename in files_to_copy:
-    src = os.path.join(output_dir, filename)
-    dst = os.path.join(post_dir, filename)
-    if os.path.exists(src):
-        shutil.copy2(src, dst)
-        print(f"Copied {filename} to blog")
-    else:
-        print(f"File not found: {filename}")
+if __name__ == "__main__":
+    copy_files()
+    git_commit_push()
