@@ -1,7 +1,4 @@
-- name: Publish results to data-blog
-  env:
-    DATA_BLOG_TOKEN: ${{ secrets.DATA_BLOG_TOKEN }}
-  run: python publish_to_blog.py $DATA_BLOG_TOKEN
+name: Scrape, Analyze and Publish Blog Results
 
 on:
   workflow_dispatch:
@@ -47,6 +44,12 @@ jobs:
 
       - name: List files in cloned data-blog results folder (before publish script)
         run: ls -l data-blog/results
+
+      - name: Publish results to data-blog
+        env:
+          DATA_BLOG_TOKEN: ${{ secrets.DATA_BLOG_TOKEN }}
+        run: python publish_to_blog.py "$DATA_BLOG_TOKEN"
+
 
       - name: Publish results to data-blog
         run: python publish_to_blog.py
