@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pandas requests jupyter nbconvert matplotlib seaborn altair folium scikit-learn geopy
+          pip install pandas requests jupyter nbconvert matplotlib seaborn folium scikit-learn geopy altair
 
       - name: Run scraper
         env:
@@ -35,7 +35,6 @@ jobs:
 
       - name: List files in output folder (debug)
         run: ls -l output
-0
 
       - name: Clone data-blog repo
         env:
@@ -43,5 +42,9 @@ jobs:
         run: |
           git clone https://x-access-token:${DATA_BLOG_TOKEN}@github.com/Flazoukie/data-blog.git
 
+      - name: List files in cloned data-blog results folder (before publish script)
+        run: ls -l data-blog/results
+
       - name: Publish results to data-blog
         run: python publish_to_blog.py
+
