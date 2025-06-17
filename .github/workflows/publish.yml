@@ -3,9 +3,9 @@ name: Publish Analysis Results
 on:
   push:
     branches:
-      - main      # or your default branch
+      - main
     paths:
-      - 'data-blog/results/**'   # trigger only if results folder changes
+      - 'results/**'
 
 jobs:
   publish:
