@@ -42,8 +42,8 @@ def git_commit_push(github_token):
         print("No changes detected in results folder. Nothing to commit.")
 
 if __name__ == "__main__":
-    token = os.getenv("DATA_BLOG_TOKEN")
+    token = os.getenv("BLOG_REPO_TOKEN")
     if not token:
-        raise RuntimeError("GitHub token not provided in environment variable DATA_BLOG_TOKEN.")
+        raise RuntimeError("GitHub token not provided in environment variable BLOG_REPO_TOKEN.")
     copy_files()
     git_commit_push(token)
