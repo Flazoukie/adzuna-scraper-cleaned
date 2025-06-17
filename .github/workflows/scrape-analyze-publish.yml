@@ -38,18 +38,18 @@ jobs:
 
       - name: Clone data-blog repo
         env:
-          DATA_BLOG_TOKEN: ${{ secrets.DATA_BLOG_TOKEN }}
+          BLOG_REPO_TOKEN: ${{ secrets.BLOG_REPO_TOKEN }}
         shell: bash
         run: |
-          git clone https://x-access-token:${DATA_BLOG_TOKEN}@github.com/Flazoukie/data-blog.git
+          git clone https://x-access-token:${BLOG_REPO_TOKEN}@github.com/Flazoukie/data-blog.git
 
       - name: List files in cloned data-blog results folder (before publish script)
         run: ls -l data-blog/results
 
       - name: Publish results to data-blog
         env:
-          DATA_BLOG_TOKEN: ${{ secrets.DATA_BLOG_TOKEN }}
+          BLOG_REPO_TOKEN: ${{ secrets.BLOG_REPO_TOKEN }}
         shell: bash
         run: |
-          echo "DATA_BLOG_TOKEN is set: ${DATA_BLOG_TOKEN:+yes}"
+          echo "BLOG_REPO_TOKEN is set: ${BLOG_REPO_TOKEN:+yes}"
           python publish_to_blog.py
