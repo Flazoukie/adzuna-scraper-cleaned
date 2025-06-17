@@ -1,4 +1,7 @@
-name: Scrape, Analyze and Publish Blog Results
+- name: Publish results to data-blog
+  env:
+    DATA_BLOG_TOKEN: ${{ secrets.DATA_BLOG_TOKEN }}
+  run: python publish_to_blog.py $DATA_BLOG_TOKEN
 
 on:
   workflow_dispatch:
