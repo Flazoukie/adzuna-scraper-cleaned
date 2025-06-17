@@ -34,11 +34,11 @@ jobs:
         env:
           BLOG_REPO_TOKEN: ${{ secrets.BLOG_REPO_TOKEN }}
         run: |
-          git clone https://x-access-token:${BLOG_REPO_TOKEN}@github.com/Flazoukie/data-blog.git
+          git clone https://x-access-token:${BLOG_REPO_TOKEN}@github.com/Flazoukie/data-blog.git data-blog
 
       - name: Copy analysis results to data-blog repo
         run: |
-          # Replace `results` with the folder where your notebook saves output files
+          # Adjust 'results' below if your notebook saves files elsewhere
           cp -r results/* data-blog/results/
 
       - name: Commit and push results to data-blog
@@ -49,4 +49,3 @@ jobs:
           git add results/*
           git commit -m "Add latest analysis results $(date +'%Y-%m-%d')" || echo "No changes to commit"
           git push
-
