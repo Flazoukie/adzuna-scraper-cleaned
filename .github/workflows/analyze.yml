@@ -36,7 +36,8 @@ jobs:
 
       - name: Copy analysis results to data-blog repo
         run: |
-          cp -r output/* data-blog/results/
+          mkdir -p data-blog/results/${{ env.TODAY }}
+          cp -r output/${{ env.TODAY }}/* data-blog/results/${{ env.TODAY }}/
 
       - name: Commit and push results to data-blog
         run: |
