@@ -2,12 +2,23 @@ name: Analyze Scraped Data
 
 on:
   workflow_dispatch:
+  workflow_run:
+    workflows: ["scrape"]
+    types:
+      - completed
 
 jobs:
   analyze:
     runs-on: ubuntu-latest
 
+    env:
+      TODAY: ${{ steps.date.outputs.today }}
+
     steps:
+      - name: Set date
+        id: date
+        run: echo "today=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+
       - name: Checkout scraper repo
         uses: actions/checkout@v3
 
@@ -30,6 +41,11 @@ jobs:
         run: |
           jupyter nbconvert --to notebook --execute analyze_jobs.ipynb --output output.ipynb --ExecutePreprocessor.timeout=600 --ExecutePreprocessor.allow_errors=True
 
+      - name: Debug output folder contents
+        run: |
+          echo "Contents of output:"
+          ls -R output
+
       - name: Clone data-blog repository
         run: |
           git clone https://x-access-token:${{ secrets.BLOG_REPO_TOKEN }}@github.com/Flazoukie/data-blog.git data-blog
@@ -45,5 +61,5 @@ jobs:
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git add results/*
-          git commit -m "Add latest analysis results $(date +'%Y-%m-%d')" || echo "No changes to commit"
+          git commit -m "Add latest analysis results ${{ env.TODAY }}" || echo "No changes to commit"
           git push
