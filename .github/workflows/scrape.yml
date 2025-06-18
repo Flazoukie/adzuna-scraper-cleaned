@@ -33,6 +33,7 @@ jobs:
         git config user.email "github-actions@github.com"
         git add data/*.csv
         git commit -m "Add weekly job data" || echo "No changes to commit"
+        git pull --rebase origin main || echo "No remote changes to pull"
         git push
 
     - name: Trigger analysis workflow
@@ -40,4 +41,3 @@ jobs:
       with:
         workflow: analyze.yml  # Adjust if your file name is different
         token: ${{ secrets.GITHUB_TOKEN }}
-
