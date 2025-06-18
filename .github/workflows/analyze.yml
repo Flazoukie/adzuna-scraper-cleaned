@@ -31,14 +31,11 @@ jobs:
           jupyter nbconvert --to notebook --execute analyze_jobs.ipynb --output output.ipynb --ExecutePreprocessor.timeout=600 --ExecutePreprocessor.allow_errors=True
 
       - name: Clone data-blog repository
-        env:
-          BLOG_REPO_TOKEN: ${{ secrets.BLOG_REPO_TOKEN }}
         run: |
-          git clone https://x-access-token:${BLOG_REPO_TOKEN}@github.com/Flazoukie/data-blog.git data-blog
+          git clone https://x-access-token:${{ secrets.BLOG_REPO_TOKEN }}@github.com/Flazkie/data-blog.git data-blog
 
       - name: Copy analysis results to data-blog repo
         run: |
-          # Adjust 'results' below if your notebook saves files elsewhere
           cp -r output/* data-blog/results/
 
       - name: Commit and push results to data-blog
