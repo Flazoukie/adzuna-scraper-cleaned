@@ -2,7 +2,7 @@ name: Scrape Job Data
 
 on:
   schedule:
-    - cron: '0 7 * * 1'  # Every Monday at 08:00 UTC
+    - cron: '0 7 * * 1'  # Every Monday at 07:00 UTC (08:00 CET)
   workflow_dispatch:
 
 jobs:
@@ -38,6 +38,6 @@ jobs:
     - name: Trigger analysis workflow
       uses: benc-uk/workflow-dispatch@v1
       with:
-        workflow: analyze.yml  # Name of the second workflow file
-        token: ${{ secrets.BLOG_REPO_TOKEN }}
+        workflow: analyze.yml  # Adjust if your file name is different
+        token: ${{ secrets.GITHUB_TOKEN }}
 
