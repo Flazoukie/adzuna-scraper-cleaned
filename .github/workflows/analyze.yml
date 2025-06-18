@@ -7,10 +7,6 @@ jobs:
   analyze:
     runs-on: ubuntu-latest
 
-    env:
-      # We'll still generate the date in a step and use it as before
-      TODAY: ${{ steps.date.outputs.today }}
-
     steps:
       - id: date
         run: echo "today=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
