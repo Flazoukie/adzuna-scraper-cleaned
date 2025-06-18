@@ -11,9 +11,6 @@ jobs:
   analyze:
     runs-on: ubuntu-latest
 
-    env:
-      TODAY: ${{ steps.date.outputs.today }}
-
     steps:
       - name: Set date
         id: date
@@ -52,8 +49,8 @@ jobs:
 
       - name: Copy analysis results to data-blog repo
         run: |
-          mkdir -p data-blog/results/${{ env.TODAY }}
-          cp -r output/${{ env.TODAY }}/* data-blog/results/${{ env.TODAY }}/
+          mkdir -p data-blog/results/${{ steps.date.outputs.today }}
+          cp -r output/${{ steps.date.outputs.today }}/* data-blog/results/${{ steps.date.outputs.today }}/
 
       - name: Commit and push results to data-blog
         run: |
@@ -61,6 +58,6 @@ jobs:
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git add results/*
-          git commit -m "Add latest analysis results ${{ env.TODAY }}" || echo "No changes to commit"
+          git commit -m "Add latest analysis results ${{ steps.date.outputs.today }}" || echo "No changes to commit"
           git push
 
