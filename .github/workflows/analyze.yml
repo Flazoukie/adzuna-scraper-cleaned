@@ -1,10 +1,15 @@
 name: Analyze Scraped Data
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:      # Manual trigger
+  workflow_run:          # Auto trigger after scrape finishes
+    workflows: ["Scrape Job Data"]  # <-- replace with your scrape workflow name
+    types:
+      - completed
 
 jobs:
   analyze:
+    if: ${{ github.event_name == 'workflow_dispatch' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') }}
     runs-on: ubuntu-latest
 
     steps:
@@ -22,23 +27,11 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pandas requests jupyter nbconvert seaborn matplotlib folium
-
-      - name: List data directory contents for debug
-        run: |
-          echo "Current directory: $(pwd)"
-          ls -l data
+          pip install pandas requests jupyter nbconvert matplotlib seaborn folium
 
       - name: Execute analysis notebook
         run: |
           jupyter nbconvert --to notebook --execute analyze_jobs.ipynb --output output.ipynb --ExecutePreprocessor.timeout=600 --ExecutePreprocessor.allow_errors=True
-
-      - name: Debug output folder contents
-        run: |
-          echo "Listing all contents of output folder:"
-          ls -lR output
-          echo "Listing contents of today's output folder:"
-          ls -lR output/${{ steps.date.outputs.today }} || echo "No dated output folder found."
 
       - name: Clone data-blog repository
         run: |
@@ -47,13 +40,14 @@ jobs:
       - name: Copy analysis results to data-blog repo
         run: |
           mkdir -p data-blog/results/${{ steps.date.outputs.today }}
-          cp -r output/* data-blog/results/${{ steps.date.outputs.today }}/
+          cp -r output/${{ steps.date.outputs.today }}/* data-blog/results/${{ steps.date.outputs.today }}/
 
       - name: Commit and push results to data-blog
         run: |
           cd data-blog
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git add results/*
-          git commit -m "Add latest analysis results $(date +'%Y-%m-%d')" || echo "No changes to commit"
+          git add results/${{ steps.date.outputs.today }}/*
+          git commit -m "Add latest analysis results ${{ steps.date.outputs.today }}" || echo "No changes to commit"
           git push
+
