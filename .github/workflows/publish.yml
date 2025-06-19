@@ -1,38 +1,11 @@
-name: Publish Weekly Analysis Post
+- name: Generate new weekly post
+  working-directory: data-blog
+  run: |
+    DATE=${{ steps.date.outputs.today }}
+    POST_FILENAME="posts/${DATE}-weekly-results.qmd"
+    RESULTS_DIR="results/${DATE}"
 
-on:
-  workflow_dispatch:
-    inputs:
-      dry_run:
-        description: 'Dry run? (skip commit/push)'
-        required: false
-        default: 'false'
-
-  workflow_run:
-    workflows: ["Analyze Scraped Data"]
-    types:
-      - completed
-
-jobs:
-  publish:
-    if: ${{ github.event_name == 'workflow_dispatch' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') }}
-    runs-on: ubuntu-latest
-
-    steps:
-      - id: date
-        run: echo "today=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
-
-      - name: Clone data-blog repository
-        run: git clone https://x-access-token:${{ secrets.BLOG_REPO_TOKEN }}@github.com/Flazoukie/data-blog.git data-blog
-
-      - name: Generate new weekly post
-        working-directory: data-blog
-        run: |
-          DATE=${{ steps.date.outputs.today }}
-          POST_FILENAME="posts/${DATE}-weekly-results.qmd"
-          RESULTS_DIR="results/${DATE}"
-
-          cat > $POST_FILENAME <<EOF
+    cat > $POST_FILENAME <<EOF
 ---
 title: "Weekly Job Market Analysis - $DATE"
 date: $DATE
@@ -44,6 +17,8 @@ Welcome to the weekly update of the data science job market in Germany!
 This analysis is based on the latest job postings collected via the [Adzuna API](https://developer.adzuna.com/), a comprehensive job search API that aggregates job offers from multiple sources.
 
 All the data fetching, cleaning, and analysis code is publicly available on GitHub in my [\`adzuna-scraper-cleaned\`](https://github.com/Flazoukie/adzuna-scraper-cleaned) repository. This project runs automatically every week to provide fresh insights.
+
+If you are interested in more details, you can check this [post](https://flazoukie.github.io/data-blog/posts/analyze_jobs.html) where I published the whole first analysis with detailed explanations.
 
 ---
 
@@ -83,13 +58,3 @@ You can also [download the full analysis notebook here](/$RESULTS_DIR/output.ipy
 
 Thank you for reading! If you want to contribute or ask questions, feel free to reach out.
 EOF
-
-      - name: Commit and push new post
-        if: ${{ github.event.inputs.dry_run != 'true' }}
-        working-directory: data-blog
-        run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git add posts/${{ steps.date.outputs.today }}-weekly-results.qmd
-          git commit -m "Add weekly results post for ${{ steps.date.outputs.today }}" || echo "No changes to commit"
-          git push
