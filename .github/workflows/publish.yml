@@ -6,7 +6,7 @@ on:
       dry_run:
         description: 'Dry run? (skip commit/push)'
         required: false
-        default: 'true'
+        default: 'false'
 
   workflow_run:
     workflows: ["Analyze Scraped Data"]
