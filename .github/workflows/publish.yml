@@ -32,59 +32,42 @@ jobs:
 
           mkdir -p posts
 
-          cat > $POST_FILENAME <<EOF
----
-title: "Weekly Job Market Analysis - $DATE"
-date: $DATE
-author: Flavia Felletti
----
-
-Welcome to the weekly update of the data science job market in Germany!
-
-This analysis is based on the latest job postings collected via the [Adzuna API](https://developer.adzuna.com/), a comprehensive job search API that aggregates job offers from multiple sources.
-
-All the data fetching, cleaning, and analysis code is publicly available on GitHub in my [\`adzuna-scraper-cleaned\`](https://github.com/Flazoukie/adzuna-scraper-cleaned) repository. This project runs automatically every week to provide fresh insights.
-
-If you are interested in more details, you can check this [post](https://flazoukie.github.io/data-blog/posts/analyze_jobs.html) where I published the whole first analysis with detailed explanations.
-
----
-
-## What you'll find in this post
-
-- A bar plot highlighting the **top cities** with the most data science job offers.
-- An **interactive company map** showing where employers are located.
-- An **interactive job table** that allows you to explore individual job postings.
-
----
-
-## Publishing cadence
-
-I publish this job market analysis on my blog every **Monday**, so you can stay up to date with the latest trends and opportunities.
-
----
-
-## Visualizations
-
-## Top Cities for Job Offers
-
-![](/$RESULTS_DIR/top_cities.png){ width=70% }
-
-## Interactive Company Map
-
-<iframe src="/$RESULTS_DIR/company_map.html" width="100%" height="600px"></iframe>
-
-## Interactive Job Table
-
-<iframe src="/$RESULTS_DIR/interactive_job_table.html" width="100%" height="600px"></iframe>
-
----
-
-You can also [download the full analysis notebook here](/$RESULTS_DIR/output.ipynb) to explore the details yourself.
-
----
-
-Thank you for reading! If you want to contribute or ask questions, feel free to reach out.
-EOF
+          echo "---" > $POST_FILENAME
+          echo "title: \"Weekly Job Market Analysis - $DATE\"" >> $POST_FILENAME
+          echo "date: $DATE" >> $POST_FILENAME
+          echo "author: Flavia Felletti" >> $POST_FILENAME
+          echo "---" >> $POST_FILENAME
+          echo "" >> $POST_FILENAME
+          echo "Welcome to the weekly update of the data science job market in Germany!" >> $POST_FILENAME
+          echo "" >> $POST_FILENAME
+          echo "This analysis is based on the latest job postings collected via the [Adzuna API](https://developer.adzuna.com/), a comprehensive job search API that aggregates job offers from multiple sources." >> $POST_FILENAME
+          echo "" >> $POST_FILENAME
+          echo "All the data fetching, cleaning, and analysis code is publicly available on GitHub in my [\`adzuna-scraper-cleaned\`](https://github.com/Flazoukie/adzuna-scraper-cleaned) repository. This project runs automatically every week to provide fresh insights." >> $POST_FILENAME
+          echo "" >> $POST_FILENAME
+          echo "If you are interested in more details, you can check this [post](https://flazoukie.github.io/data-blog/posts/analyze_jobs.html) where I published the whole first analysis with detailed explanations." >> $POST_FILENAME
+          echo "" >> $POST_FILENAME
+          echo "## What you'll find in this post" >> $POST_FILENAME
+          echo "- A bar plot highlighting the **top cities** with the most data science job offers." >> $POST_FILENAME
+          echo "- An **interactive company map** showing where employers are located." >> $POST_FILENAME
+          echo "- An **interactive job table** that allows you to explore individual job postings." >> $POST_FILENAME
+          echo "" >> $POST_FILENAME
+          echo "## Publishing cadence" >> $POST_FILENAME
+          echo "I publish this job market analysis on my blog every **Monday**, so you can stay up to date with the latest trends and opportunities." >> $POST_FILENAME
+          echo "" >> $POST_FILENAME
+          echo "## Visualizations" >> $POST_FILENAME
+          echo "### Top Cities for Job Offers" >> $POST_FILENAME
+          echo "![](/$RESULTS_DIR/top_cities.png){ width=70% }" >> $POST_FILENAME
+          echo "" >> $POST_FILENAME
+          echo "### Interactive Company Map" >> $POST_FILENAME
+          echo "<iframe src=\"/$RESULTS_DIR/company_map.html\" width=\"100%\" height=\"600px\"></iframe>" >> $POST_FILENAME
+          echo "" >> $POST_FILENAME
+          echo "### Interactive Job Table" >> $POST_FILENAME
+          echo "<iframe src=\"/$RESULTS_DIR/interactive_job_table.html\" width=\"100%\" height=\"600px\"></iframe>" >> $POST_FILENAME
+          echo "" >> $POST_FILENAME
+          echo "You can also [download the full analysis notebook here](/$RESULTS_DIR/output.ipynb) to explore the details yourself." >> $POST_FILENAME
+          echo "" >> $POST_FILENAME
+          echo "---" >> $POST_FILENAME
+          echo "Thank you for reading! If you want to contribute or ask questions, feel free to reach out." >> $POST_FILENAME
 
       - name: Show created post
         working-directory: data-blog
