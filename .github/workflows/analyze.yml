@@ -31,8 +31,14 @@ jobs:
 
       - name: Execute analysis notebook
         run: |
-          jupyter nbconvert --to notebook --execute analyze_jobs.ipynb --output output.ipynb --ExecutePreprocessor.timeout=600 --ExecutePreprocessor.allow_errors=True
-
+          mkdir -p output/${{ steps.date.outputs.today }}
+          jupyter nbconvert --to notebook \
+            --execute analyze_jobs.ipynb \
+            --output output.ipynb \
+            --output-dir output/${{ steps.date.outputs.today }} \
+            --ExecutePreprocessor.timeout=600 \
+            --ExecutePreprocessor.allow_errors=True
+            
       - name: Check generated output folder
         run: |
           echo "Checking contents of output folder:"
@@ -58,7 +64,6 @@ jobs:
         continue-on-error: false
         run: |
           cp -v output/${{ steps.date.outputs.today }}/* data-blog/results/${{ steps.date.outputs.today }}/
-          cp -v output/output.ipynb data-blog/results/${{ steps.date.outputs.today }}/
 
       - name: List blog results folder before committing
         run: |
