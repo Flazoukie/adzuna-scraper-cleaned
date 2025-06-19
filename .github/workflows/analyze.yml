@@ -1,9 +1,9 @@
 name: Analyze Scraped Data
 
 on:
-  workflow_dispatch:      # Manual trigger
-  workflow_run:          # Auto trigger after scrape finishes
-    workflows: ["Scrape Job Data"]  # <-- replace with your scrape workflow name
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["Scrape Job Data"]
     types:
       - completed
 
@@ -33,6 +33,13 @@ jobs:
         run: |
           jupyter nbconvert --to notebook --execute analyze_jobs.ipynb --output output.ipynb --ExecutePreprocessor.timeout=600 --ExecutePreprocessor.allow_errors=True
 
+      - name: Check generated output folder
+        run: |
+          echo "Checking contents of output folder:"
+          ls -R output || true
+          echo "Checking today's date folder:"
+          ls -R output/${{ steps.date.outputs.today }} || { echo "Output folder for today not found!"; exit 1; }
+
       - name: Clone data-blog repository
         run: |
           git clone https://x-access-token:${{ secrets.BLOG_REPO_TOKEN }}@github.com/Flazoukie/data-blog.git data-blog
@@ -40,7 +47,7 @@ jobs:
       - name: Copy analysis results to data-blog repo
         run: |
           mkdir -p data-blog/results/${{ steps.date.outputs.today }}
-          cp -r output/${{ steps.date.outputs.today }}/* data-blog/results/${{ steps.date.outputs.today }}/
+          cp -v output/${{ steps.date.outputs.today }}/* data-blog/results/${{ steps.date.outputs.today }}/
 
       - name: Commit and push results to data-blog
         run: |
@@ -50,4 +57,3 @@ jobs:
           git add results/${{ steps.date.outputs.today }}/*
           git commit -m "Add latest analysis results ${{ steps.date.outputs.today }}" || echo "No changes to commit"
           git push
-
