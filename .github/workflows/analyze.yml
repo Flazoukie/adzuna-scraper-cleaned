@@ -1,9 +1,9 @@
 name: Analyze Scraped Data
 
 on:
-  workflow_dispatch:      # Manual trigger
-  workflow_run:          # Auto trigger after scrape finishes
-    workflows: ["Scrape Job Data"]  # <-- replace with your scrape workflow name
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["Scrape Job Data"]
     types:
       - completed
 
@@ -27,27 +27,55 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pandas requests jupyter nbconvert matplotlib seaborn folium
+          pip install -r requirements-ci.txt
+          pip install jupyter nbconvert
 
       - name: Execute analysis notebook
         run: |
-          jupyter nbconvert --to notebook --execute analyze_jobs.ipynb --output output.ipynb --ExecutePreprocessor.timeout=600 --ExecutePreprocessor.allow_errors=True
+          mkdir -p output/${{ steps.date.outputs.today }}
+          jupyter nbconvert --to notebook \
+            --execute analyze_jobs.ipynb \
+            --output output.ipynb \
+            --output-dir output/${{ steps.date.outputs.today }} \
+            --ExecutePreprocessor.timeout=600 \
+            --ExecutePreprocessor.allow_errors=True
+            
+      - name: Check generated output folder
+        run: |
+          echo "Checking contents of output folder:"
+          ls -R output || true
+          echo "Checking today's date folder:"
+          ls -R output/${{ steps.date.outputs.today }} || { echo "Output folder for today not found!"; exit 1; }
 
       - name: Clone data-blog repository
         run: |
           git clone https://x-access-token:${{ secrets.BLOG_REPO_TOKEN }}@github.com/Flazoukie/data-blog.git data-blog
 
-      - name: Copy analysis results to data-blog repo
+      - name: List output folder contents
         run: |
+          echo "Notebook output files:"
+          ls -lh output/${{ steps.date.outputs.today }}
+
+      - name: Clean old results folder
+        run: |
+          rm -rf data-blog/results/${{ steps.date.outputs.today }}
           mkdir -p data-blog/results/${{ steps.date.outputs.today }}
-          cp -r output/${{ steps.date.outputs.today }}/* data-blog/results/${{ steps.date.outputs.today }}/
+
+      - name: Copy analysis results to data-blog repo
+        continue-on-error: false
+        run: |
+          cp -v output/${{ steps.date.outputs.today }}/* data-blog/results/${{ steps.date.outputs.today }}/
+
+      - name: List blog results folder before committing
+        run: |
+          echo "Files in blog repo to be committed:"
+          ls -lh data-blog/results/${{ steps.date.outputs.today }}
 
       - name: Commit and push results to data-blog
         run: |
           cd data-blog
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git add results/${{ steps.date.outputs.today }}/*
+          git add results/${{ steps.date.outputs.today }}
           git commit -m "Add latest analysis results ${{ steps.date.outputs.today }}" || echo "No changes to commit"
           git push
-
