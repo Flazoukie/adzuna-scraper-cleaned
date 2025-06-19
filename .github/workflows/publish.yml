@@ -1,11 +1,37 @@
-- name: Generate new weekly post
-  working-directory: data-blog
-  run: |
-    DATE=${{ steps.date.outputs.today }}
-    POST_FILENAME="posts/${DATE}-weekly-results.qmd"
-    RESULTS_DIR="results/${DATE}"
+name: Publish Weekly Post
 
-    cat > $POST_FILENAME <<EOF
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run? (skip commit/push)'
+        required: false
+        default: 'false'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout data-blog repo
+        uses: actions/checkout@v3
+        with:
+          repository: Flazoukie/data-blog
+          token: ${{ secrets.BLOG_REPO_TOKEN }}
+          path: data-blog
+
+      - name: Set today's date
+        id: date
+        run: echo "today=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+
+      - name: Generate new weekly post
+        working-directory: data-blog
+        run: |
+          DATE=${{ steps.date.outputs.today }}
+          POST_FILENAME="posts/${DATE}-weekly-results.qmd"
+          RESULTS_DIR="results/${DATE}"
+
+          cat > $POST_FILENAME <<EOF
 ---
 title: "Weekly Job Market Analysis - $DATE"
 date: $DATE
@@ -58,3 +84,17 @@ You can also [download the full analysis notebook here](/$RESULTS_DIR/output.ipy
 
 Thank you for reading! If you want to contribute or ask questions, feel free to reach out.
 EOF
+
+      - name: List post created
+        working-directory: data-blog
+        run: ls -lh posts/
+
+      - name: Commit and push new post
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        working-directory: data-blog
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add posts/
+          git commit -m "Add weekly results post for ${{ steps.date.outputs.today }}" || echo "No changes to commit"
+          git push
