@@ -1,3 +1,30 @@
+name: Publish Weekly Analysis Post
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run? (skip commit/push)'
+        required: false
+        default: 'true'
+
+  workflow_run:
+    workflows: ["Analyze Scraped Data"]
+    types:
+      - completed
+
+jobs:
+  publish:
+    if: ${{ github.event_name == 'workflow_dispatch' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - id: date
+        run: echo "today=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+
+      - name: Clone data-blog repository
+        run: git clone https://x-access-token:${{ secrets.BLOG_REPO_TOKEN }}@github.com/Flazoukie/data-blog.git data-blog
+
       - name: Generate new weekly post
         working-directory: data-blog
         run: |
@@ -56,3 +83,13 @@ You can also [download the full analysis notebook here](/$RESULTS_DIR/output.ipy
 
 Thank you for reading! If you want to contribute or ask questions, feel free to reach out.
 EOF
+
+      - name: Commit and push new post
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        working-directory: data-blog
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add posts/${{ steps.date.outputs.today }}-weekly-results.qmd
+          git commit -m "Add weekly results post for ${{ steps.date.outputs.today }}" || echo "No changes to commit"
+          git push
