@@ -44,10 +44,26 @@ jobs:
         run: |
           git clone https://x-access-token:${{ secrets.BLOG_REPO_TOKEN }}@github.com/Flazoukie/data-blog.git data-blog
 
-      - name: Copy analysis results to data-blog repo
+      - name: List output folder contents
         run: |
+          echo "Notebook output files:"
+          ls -lh output/${{ steps.date.outputs.today }}
+
+      - name: Clean old results folder
+        run: |
+          rm -rf data-blog/results/${{ steps.date.outputs.today }}
           mkdir -p data-blog/results/${{ steps.date.outputs.today }}
+
+      - name: Copy analysis results to data-blog repo
+        continue-on-error: false
+        run: |
           cp -v output/${{ steps.date.outputs.today }}/* data-blog/results/${{ steps.date.outputs.today }}/
+          cp -v output/output.ipynb data-blog/results/${{ steps.date.outputs.today }}/
+
+      - name: List blog results folder before committing
+        run: |
+          echo "Files in blog repo to be committed:"
+          ls -lh data-blog/results/${{ steps.date.outputs.today }}
 
       - name: Commit and push results to data-blog
         run: |
