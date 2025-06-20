@@ -48,6 +48,8 @@ jobs:
           echo "" >> $POST_FILENAME
           echo "Welcome to the weekly update of the data science job market in Germany!" >> $POST_FILENAME
           echo "" >> $POST_FILENAME
+          echo "![Featured Image](../images/weekly-job-image.png){ width=70% }" >> $POST_FILENAME
+          echo "" >> $POST_FILENAME
           echo "This analysis is based on the latest job postings collected via the [Adzuna API](https://developer.adzuna.com/), a comprehensive job search API that aggregates job offers from multiple sources." >> $POST_FILENAME
           echo "" >> $POST_FILENAME
           echo "All the data fetching, cleaning, and analysis code is publicly available on GitHub in my [\`adzuna-scraper-cleaned\`](https://github.com/Flazoukie/adzuna-scraper-cleaned) repository. This project runs automatically every week to provide fresh insights." >> $POST_FILENAME
@@ -90,6 +92,5 @@ jobs:
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git add posts
-          git commit -m "Add weekly job post for ${{ steps.date.outputs.today }}" || echo "No changes to commit"
+          git commit -m "Add weekly job post for ${{ steps.date.outputs.iso }}" || echo "No changes to commit"
           git push
-
