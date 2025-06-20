@@ -9,7 +9,7 @@ on:
         default: 'false'
 
   workflow_run:
-    workflows: ["Analyze Job Data"]
+    workflows: ["Analyze Scraped Data"]
     types:
       - completed  
 
