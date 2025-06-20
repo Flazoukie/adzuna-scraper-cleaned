@@ -48,7 +48,7 @@ jobs:
           echo "" >> $POST_FILENAME
           echo "Welcome to the weekly update of the data science job market in Germany!" >> $POST_FILENAME
           echo "" >> $POST_FILENAME
-          echo "![Featured Image](../images/weekly-job-image.png){ width=70% }" >> $POST_FILENAME
+          echo "![Featured Image](../images/weekly_job_analysis.jpg){ width=70% }" >> $POST_FILENAME
           echo "" >> $POST_FILENAME
           echo "This analysis is based on the latest job postings collected via the [Adzuna API](https://developer.adzuna.com/), a comprehensive job search API that aggregates job offers from multiple sources." >> $POST_FILENAME
           echo "" >> $POST_FILENAME
