@@ -8,6 +8,11 @@ on:
         required: false
         default: 'false'
 
+  workflow_run:
+    workflows: ["Analyze Job Data"]
+    types:
+      - completed  
+
 jobs:
   publish:
     runs-on: ubuntu-latest
