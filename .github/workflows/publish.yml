@@ -19,7 +19,9 @@ jobs:
 
     steps:
       - id: date
-        run: echo "today=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+        run: |
+          echo "iso=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+          echo "german=$(date +'%d/%m/%Y')" >> $GITHUB_OUTPUT
 
       - name: Checkout blog repository
         uses: actions/checkout@v3
@@ -31,14 +33,15 @@ jobs:
       - name: Generate new weekly post
         working-directory: data-blog
         run: |
-          DATE=${{ steps.date.outputs.today }}
+          DATE=${{ steps.date.outputs.iso }}
+          DISPLAY_DATE=${{ steps.date.outputs.german }}
           POST_FILENAME="posts/${DATE}-weekly-results.qmd"
           RESULTS_DIR="results/${DATE}"
 
           mkdir -p posts
 
           echo "---" > $POST_FILENAME
-          echo "title: \"Weekly Job Market Analysis - $DATE\"" >> $POST_FILENAME
+          echo "title: \"Weekly Job Market Analysis - $DISPLAY_DATE\"" >> $POST_FILENAME
           echo "date: $DATE" >> $POST_FILENAME
           echo "author: Flavia Felletti" >> $POST_FILENAME
           echo "---" >> $POST_FILENAME
