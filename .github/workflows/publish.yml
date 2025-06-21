@@ -45,7 +45,7 @@ jobs:
 title: "Weekly Job Market Analysis - $DISPLAY_DATE"
 date: $DATE
 author: Flavia Felletti
-image: images/weekly_job_analysis.jpg
+image: /images/weekly_job_analysis.jpg
 ---
 
 Welcome to the weekly update of the data science job market in Germany!
@@ -96,3 +96,4 @@ EOF
           git add posts
           git commit -m "Add weekly job post for ${{ steps.date.outputs.iso }}" || echo "No changes to commit"
           git push
+
