@@ -73,7 +73,7 @@ jobs:
           echo "### Interactive Job Table" >> $POST_FILENAME
           echo "<iframe src=\"/$RESULTS_DIR/interactive_job_table.html\" width=\"100%\" height=\"600px\"></iframe>" >> $POST_FILENAME
           echo "" >> $POST_FILENAME
-          echo "You can also [download the full analysis notebook here](/$RESULTS_DIR/output.ipynb) to explore the details yourself." >> $POST_FILENAME
+          echo "You can also [visualize the full analysis notebook here](/$RESULTS_DIR/output.ipynb) to explore the details yourself." >> $POST_FILENAME
           echo "" >> $POST_FILENAME
           echo "---" >> $POST_FILENAME
           echo "Thank you for reading! If you want to contribute or ask questions, feel free to reach out." >> $POST_FILENAME
